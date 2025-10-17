@@ -1,25 +1,66 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Jeevi Academy - Certified Cloud Practitioner Course | Master Cloud Computing in 90 Days</title>
-    <meta name="description" content="Transform your career with Jeevi Academy's Cloud Practitioner Certification. Master AWS, Azure, Google Cloud & DevOps. 5.0 rated course with lifetime placement support. Get 20% off - Limited time!" />
-    <meta name="author" content="Jeevi Academy" />
-    <meta name="keywords" content="cloud practitioner course, aws certification, azure training, google cloud course, devops training, kubernetes course, cloud computing, cloud security, cloud architecture" />
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cloud Technology Course | Jeevi Academy</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- GA4 / GTM can go here -->
+</head>
+<body>
+  <section class="wrap">
+    <h1>Cloud Technology Course</h1>
+    <p>Fast-track your cloud career with hands-on training.</p>
 
-    <meta property="og:title" content="Jeevi Academy - Certified Cloud Practitioner Course | Master Cloud Computing in 90 Days" />
-    <meta property="og:description" content="Transform your career with Jeevi Academy's Cloud Practitioner Certification. Master AWS, Azure, Google Cloud & DevOps. 5.0 rated course with lifetime placement support." />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <!-- Turnstile (Cloudflare) -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-  </head>
+    <form id="leadForm">
+      <input name="name" placeholder="Your Name" required />
+      <input name="email" type="email" placeholder="Your Email" required />
+      <input name="phone" placeholder="Phone" />
+      <!-- Honeypot -->
+      <input name="company" autocomplete="off" tabindex="-1" style="position:absolute;left:-9999px" />
+      <!-- Turnstile widget -->
+      <div class="cf-turnstile" data-sitekey="YOUR_TURNSTILE_SITE_KEY"></div>
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+      <button type="submit">Enroll Now</button>
+      <p id="msg" style="display:none">Submitting…</p>
+    </form>
+  </section>
+
+  <script>
+    const form = document.getElementById("leadForm");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const msg = document.getElementById("msg");
+      msg.style.display = "block";
+
+      const data = Object.fromEntries(new FormData(form).entries());
+
+      // Include UTM + referrer (handy for Ads/Analytics)
+      const qs = new URLSearchParams(location.search);
+      data.utm_source = qs.get("utm_source") || "";
+      data.utm_medium = qs.get("utm_medium") || "";
+      data.utm_campaign = qs.get("utm_campaign") || "";
+      data.referrer = document.referrer || "";
+
+      // Submit to your Cloudflare Worker API on jeeviacademy.com
+      const res = await fetch("https://www.jeeviacademy.com/api/lead", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (res.ok) {
+        // Optional: GA4 event
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ event: "lead_form_submit" });
+        location.href = "/landingpage/thank-you/";
+      } else {
+        msg.textContent = "Submission failed. Please try again.";
+      }
+    });
+  </script>
+</body>
 </html>
