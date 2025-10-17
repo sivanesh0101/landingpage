@@ -5,7 +5,7 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  // IMPORTANT for GitHub Pages: must be your repo name with leading/trailing slashes
+  // Deploying under: https://sivanesh0101.github.io/landingpage/cloud-practitioner-course/
   base: "/landingpage/cloud-practitioner-course/",
   server: {
     host: "::",

@@ -4,17 +4,16 @@
   "version": "0.0.0",
   "type": "module",
   "homepage": "https://sivanesh0101.github.io/landingpage/cloud-practitioner-course",
-
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "build:dev": "vite build --mode development",
-    "preview": "vite preview",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist",
-    "postbuild": "cp dist/index.html dist/404.html || copy dist\\index.html dist\\404.html"
+    "predeploy": "npm run build && rm -rf site && mkdir -p site/cloud-practitioner-course && cp -r dist/* site/cloud-practitioner-course/ && cp site/cloud-practitioner-course/index.html site/404.html && touch site/.nojekyll",
+    "deploy": "gh-pages -d site",
+    "postbuild": "cp dist/index.html dist/404.html || copy dist\\index.html dist\\404.html",
+    "lint": "eslint .",
+    "preview": "vite preview"
   },
-
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "^1.2.11",
@@ -50,7 +49,6 @@
     "cmdk": "^1.1.1",
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.6.0",
-    "gh-pages": "^6.3.0",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.462.0",
     "next-themes": "^0.3.0",
@@ -75,6 +73,7 @@
     "@types/react-dom": "^18.3.7",
     "@vitejs/plugin-react-swc": "^3.11.0",
     "autoprefixer": "^10.4.21",
+    "gh-pages": "^6.3.0",
     "eslint": "^9.32.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
@@ -84,6 +83,6 @@
     "tailwindcss": "^3.4.17",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.38.0",
-    "vite": "^7.1.10"
+    "vite": "^5.4.19"
   }
 }
