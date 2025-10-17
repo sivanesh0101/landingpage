@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://sivanesh0101.github.io/landingpage/cloud-practitioner-course",
+  "homepage": "https://sivanesh0101.github.io/landingpage",
 
   "scripts": {
     "dev": "vite",
