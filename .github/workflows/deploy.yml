@@ -35,13 +35,16 @@ jobs:
         run: |
           npm run build -- --base=/landingpage/cloud-practitioner-course/
           cp dist/index.html dist/404.html
-          touch dist/.nojekyll
+          mkdir -p site/cloud-practitioner-course
+          cp -r dist/* site/cloud-practitioner-course/
+          # Place .nojekyll at the site root to avoid Jekyll processing
+          touch site/.nojekyll
         working-directory: cloud-practitioner-course
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: cloud-practitioner-course/dist
+          path: cloud-practitioner-course/site
 
   deploy:
     environment:
