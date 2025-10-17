@@ -1,0 +1,73 @@
+name: Build and Deploy cloud-practitioner-course to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: cloud-practitioner-course/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: cloud-practitioner-course
+
+      - name: Build app for subpath
+        run: |
+          npm run build -- --base=/landingpage/cloud-practitioner-course/
+          cp dist/index.html dist/404.html
+          rm -rf site
+          mkdir -p site/cloud-practitioner-course
+          cp -r dist/* site/cloud-practitioner-course/
+          # Put a root 404.html so deep links at Pages root redirect to SPA
+          cp site/cloud-practitioner-course/index.html site/404.html
+          # Root index.html redirect to subpath (helpful when visiting project root)
+          cat > site/index.html <<'EOF'
+          <!doctype html>
+          <html>
+            <head>
+              <meta charset="utf-8" />
+              <meta http-equiv="refresh" content="0; url=/landingpage/cloud-practitioner-course/" />
+              <title>Redirecting…</title>
+            </head>
+            <body>Redirecting to <a href="/landingpage/cloud-practitioner-course/">cloud-practitioner-course</a>…</body>
+          </html>
+          EOF
+          touch site/.nojekyll
+        working-directory: cloud-practitioner-course
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: cloud-practitioner-course/site
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
